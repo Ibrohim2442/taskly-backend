@@ -10,6 +10,12 @@ class Card extends Model
     /** @use HasFactory<\Database\Factories\CardFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'description',
+        'status_id',
+    ];
+
     public function status()
     {
         return $this->belongsTo(Status::class);

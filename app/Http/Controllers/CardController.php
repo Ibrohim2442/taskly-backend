@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Card;
-use App\Http\Requests\StoreCardRequest;
-use App\Http\Requests\UpdateCardRequest;
+use Illuminate\Http\Request;
 
 class CardController extends Controller
 {
@@ -19,7 +18,7 @@ class CardController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCardRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -35,7 +34,7 @@ class CardController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCardRequest $request, Card $card)
+    public function update(Request $request, Card $card)
     {
         //
     }
