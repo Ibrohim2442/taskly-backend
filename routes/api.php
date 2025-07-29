@@ -12,10 +12,12 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //})->middleware('auth:sanctum');
 
-Route::apiResource('projects', ProjectController::class);
-Route::apiResource('boards', BoardController::class);
-Route::apiResource('statuses', StatusController::class);
-Route::apiResource('cards', CardController::class);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('projects', ProjectController::class);
+    Route::apiResource('boards', BoardController::class);
+    Route::apiResource('statuses', StatusController::class);
+    Route::apiResource('cards', CardController::class);
+});
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);

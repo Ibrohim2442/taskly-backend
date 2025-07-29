@@ -22,10 +22,9 @@ class ProjectController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string',
-            'user_id' => 'required|exists:users,id',
         ]);
 
-        $project = Project::create($validated);
+        $project = $request->user()->projects()->create($validated);
 
         return $project;
     }
