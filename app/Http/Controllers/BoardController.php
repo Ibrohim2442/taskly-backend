@@ -12,7 +12,7 @@ class BoardController extends Controller
      */
     public function index()
     {
-        //
+        return Board::all();
     }
 
     /**
@@ -20,7 +20,14 @@ class BoardController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'project_id' => 'required|exists:projects,id',
+        ]);
+
+        $board = Board::create($validated);
+
+        return $board;
     }
 
     /**
@@ -28,7 +35,7 @@ class BoardController extends Controller
      */
     public function show(Board $board)
     {
-        //
+        return $board;
     }
 
     /**
@@ -36,7 +43,14 @@ class BoardController extends Controller
      */
     public function update(Request $request, Board $board)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'sometimes|string',
+            'project_id' => 'sometimes|exists:projects,id',
+        ]);
+
+        $board->update($validated);
+
+        return $board;
     }
 
     /**
@@ -44,6 +58,10 @@ class BoardController extends Controller
      */
     public function destroy(Board $board)
     {
-        //
+        $board->delete();
+
+        return [
+            'message' => 'Deleted successfully'
+        ];
     }
 }

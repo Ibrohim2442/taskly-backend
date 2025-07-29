@@ -12,7 +12,7 @@ class StatusController extends Controller
      */
     public function index()
     {
-        //
+        return Status::all();
     }
 
     /**
@@ -20,7 +20,14 @@ class StatusController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'board_id' => 'required|exists:boards,id',
+        ]);
+
+        $status = Status::create($validated);
+
+        return $status;
     }
 
     /**
@@ -28,7 +35,7 @@ class StatusController extends Controller
      */
     public function show(Status $status)
     {
-        //
+        return $status;
     }
 
     /**
@@ -36,7 +43,14 @@ class StatusController extends Controller
      */
     public function update(Request $request, Status $status)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'sometimes|string',
+            'board_id' => 'sometimes|exists:boards,id',
+        ]);
+
+        $status->update($validated);
+
+        return $status;
     }
 
     /**
@@ -44,6 +58,10 @@ class StatusController extends Controller
      */
     public function destroy(Status $status)
     {
-        //
+        $status->delete();
+
+        return [
+            'message' => 'Deleted successfully'
+        ];
     }
 }
