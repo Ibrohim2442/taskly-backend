@@ -21,7 +21,12 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return Project::with('user')->latest()->get();
+        $projects = Project::where('user_id', auth()->id())->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $projects
+        ]);
     }
 
     /**
@@ -36,7 +41,13 @@ class ProjectController extends Controller
 
         $project = $request->user()->projects()->create($validated);
 
-        return ['project' => $project, 'user' => $project->user];
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'project' => $project,
+                'user' => $project->user
+            ]
+        ], 201);
     }
 
     /**
@@ -44,7 +55,13 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        return ['project' => $project, 'user' => $project->user];
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'project' => $project,
+                'user' => $project->user
+            ]
+        ]);
     }
 
     /**
@@ -59,7 +76,10 @@ class ProjectController extends Controller
 
         $project->update($validated);
 
-        return $project;
+        return response()->json([
+            'status' => 'success',
+            'data' => $project
+        ]);
     }
 
     /**
@@ -69,8 +89,9 @@ class ProjectController extends Controller
     {
         $project->delete();
 
-        return [
+        return response()->json([
+            'status' => 'success',
             'message' => 'Deleted successfully'
-        ];
+        ]);
     }
 }

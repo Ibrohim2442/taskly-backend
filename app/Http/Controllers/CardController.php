@@ -21,7 +21,14 @@ class CardController extends Controller
      */
     public function index()
     {
-        return Card::all();
+        $cards = Card::whereHas('status.board.project', function ($query) {
+            $query->where('user_id', auth()->id());
+        })->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $cards
+        ]);
     }
 
     /**
@@ -37,7 +44,10 @@ class CardController extends Controller
 
         $card = Card::create($validated);
 
-        return $card;
+        return response()->json([
+            'status' => 'success',
+            'data' => $card
+        ], 201);
     }
 
     /**
@@ -45,7 +55,10 @@ class CardController extends Controller
      */
     public function show(Card $card)
     {
-        return $card;
+        return response()->json([
+            'status' => 'success',
+            'data' => $card
+        ]);
     }
 
     /**
@@ -61,7 +74,10 @@ class CardController extends Controller
 
         $card->update($validated);
 
-        return $card;
+        return response()->json([
+            'status' => 'success',
+            'data' => $card
+        ]);
     }
 
     /**
@@ -71,8 +87,9 @@ class CardController extends Controller
     {
         $card->delete();
 
-        return [
-            'message' => 'Deleted successfully'
-        ];
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Card deleted successfully'
+        ]);
     }
 }

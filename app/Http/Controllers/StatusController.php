@@ -21,7 +21,14 @@ class StatusController extends Controller
      */
     public function index()
     {
-        return Status::all();
+        $statuses = Status::whereHas('board.project', function ($query) {
+            $query->where('user_id', auth()->id());
+        })->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $statuses
+        ]);
     }
 
     /**
@@ -36,7 +43,10 @@ class StatusController extends Controller
 
         $status = Status::create($validated);
 
-        return $status;
+        return response()->json([
+            'status' => 'success',
+            'data' => $status
+        ], 201);
     }
 
     /**
@@ -44,7 +54,10 @@ class StatusController extends Controller
      */
     public function show(Status $status)
     {
-        return $status;
+        return response()->json([
+            'status' => 'success',
+            'data' => $status
+        ]);
     }
 
     /**
@@ -59,7 +72,10 @@ class StatusController extends Controller
 
         $status->update($validated);
 
-        return $status;
+        return response()->json([
+            'status' => 'success',
+            'data' => $status
+        ]);
     }
 
     /**
@@ -69,8 +85,9 @@ class StatusController extends Controller
     {
         $status->delete();
 
-        return [
-            'message' => 'Deleted successfully'
-        ];
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Status deleted successfully'
+        ]);
     }
 }

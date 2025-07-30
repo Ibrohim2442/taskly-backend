@@ -21,7 +21,14 @@ class BoardController extends Controller
      */
     public function index()
     {
-        return Board::all();
+        $boards = Board::whereHas('project', function ($query) {
+            $query->where('user_id', auth()->id());
+        })->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $boards
+        ]);
     }
 
     /**
@@ -36,7 +43,10 @@ class BoardController extends Controller
 
         $board = Board::create($validated);
 
-        return $board;
+        return response()->json([
+            'status' => 'success',
+            'data' => $board
+        ], 201);
     }
 
     /**
@@ -44,7 +54,10 @@ class BoardController extends Controller
      */
     public function show(Board $board)
     {
-        return $board;
+        return response()->json([
+            'status' => 'success',
+            'data' => $board
+        ]);
     }
 
     /**
@@ -59,7 +72,10 @@ class BoardController extends Controller
 
         $board->update($validated);
 
-        return $board;
+        return response()->json([
+            'status' => 'success',
+            'data' => $board
+        ]);
     }
 
     /**
@@ -69,8 +85,9 @@ class BoardController extends Controller
     {
         $board->delete();
 
-        return [
-            'message' => 'Deleted successfully'
-        ];
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Board deleted successfully'
+        ]);
     }
 }
