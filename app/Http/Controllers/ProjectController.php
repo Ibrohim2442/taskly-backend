@@ -12,7 +12,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return Project::all();
+        return Project::with('user')->latest()->get();
     }
 
     /**
@@ -22,11 +22,12 @@ class ProjectController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string',
+            'description' => 'nullable|string'
         ]);
 
         $project = $request->user()->projects()->create($validated);
 
-        return $project;
+        return ['project' => $project, 'user' => $project->user];
     }
 
     /**
@@ -34,7 +35,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        return $project;
+        return ['project' => $project, 'user' => $project->user];
     }
 
     /**
