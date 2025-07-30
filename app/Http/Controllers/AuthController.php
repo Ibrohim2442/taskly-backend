@@ -66,7 +66,7 @@ class AuthController extends Controller
         // 1. Hozirgi foydalanuvchining access tokenini o‘chirish (faqat bitta token)
         // 2. Logout muvaffaqiyatli bo‘lganini bildiruvchi JSON javob qaytarish
 
-        $request->user()->tokens()->delete();
+        $request->user()->currentAccessToken()->delete();
 
         return [
             'message' => 'You are logged out.'

@@ -13,7 +13,7 @@ class CardPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,7 +21,7 @@ class CardPolicy
      */
     public function view(User $user, Card $card): bool
     {
-        return false;
+        return $card->status->board->project->user_id === $user->id;
     }
 
     /**
@@ -29,7 +29,7 @@ class CardPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -37,7 +37,7 @@ class CardPolicy
      */
     public function update(User $user, Card $card): bool
     {
-        return false;
+        return $card->status->board->project->user_id === $user->id;
     }
 
     /**
@@ -45,7 +45,7 @@ class CardPolicy
      */
     public function delete(User $user, Card $card): bool
     {
-        return false;
+        return $card->status->board->project->user_id === $user->id;
     }
 
     /**
@@ -53,7 +53,7 @@ class CardPolicy
      */
     public function restore(User $user, Card $card): bool
     {
-        return false;
+        return $card->status->board->project->user_id === $user->id;
     }
 
     /**
@@ -61,6 +61,6 @@ class CardPolicy
      */
     public function forceDelete(User $user, Card $card): bool
     {
-        return false;
+        return $card->status->board->project->user_id === $user->id;
     }
 }

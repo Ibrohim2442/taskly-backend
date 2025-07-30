@@ -13,7 +13,7 @@ class StatusPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,7 +21,7 @@ class StatusPolicy
      */
     public function view(User $user, Status $status): bool
     {
-        return false;
+        return $status->board->project->user_id === $user->id;
     }
 
     /**
@@ -29,7 +29,7 @@ class StatusPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -37,7 +37,7 @@ class StatusPolicy
      */
     public function update(User $user, Status $status): bool
     {
-        return false;
+        return $status->board->project->user_id === $user->id;
     }
 
     /**
@@ -45,7 +45,7 @@ class StatusPolicy
      */
     public function delete(User $user, Status $status): bool
     {
-        return false;
+        return $status->board->project->user_id === $user->id;
     }
 
     /**
@@ -53,7 +53,7 @@ class StatusPolicy
      */
     public function restore(User $user, Status $status): bool
     {
-        return false;
+        return $status->board->project->user_id === $user->id;
     }
 
     /**
@@ -61,6 +61,6 @@ class StatusPolicy
      */
     public function forceDelete(User $user, Status $status): bool
     {
-        return false;
+        return $status->board->project->user_id === $user->id;
     }
 }
