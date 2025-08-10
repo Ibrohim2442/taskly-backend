@@ -10,9 +10,6 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        // 1. Request'dan kelgan malumotlarni validate qilish (name, email, password + confirmation)
-        // 2. User yaratish (hashed password bilan)
-        // 3. JSON formatda muvaffaqiyatli ro‘yxatdan o‘tish xabarini qaytarish (201 status bilan)
 
         $fields = $request->validate([
            'name' => 'required|string|max:255',
@@ -20,22 +17,26 @@ class AuthController extends Controller
            'password' => 'required|string|min:6|confirmed'
         ]);
 
-        $user = User::create($fields);
+        $user = User::create([
+            'name' => $fields['name'],
+            'email' => $fields['email'],
+            'password' => Hash::make($fields['password'])
+        ]);
 
-        $token = $user->createToken($request->name);
+        $token = $user->createToken($user->name)->plainTextToken;
 
-        return [
-            'user' => $user,
-            'token' => $token->plainTextToken
-        ];
+        return response()->json([
+            'success' => true,
+            'message' => 'User registered successfully.',
+            'data' => [
+                'user' => $user,
+                'token' => $token
+            ]
+        ], 201);
     }
 
     public function login(Request $request)
     {
-        // 1. Request'dan kelgan malumotlarni validate qilish (name, email, password + confirmation)
-        // 2. User yaratish (hashed password bilan)
-        // 3. JSON formatda muvaffaqiyatli ro‘yxatdan o‘tish xabarini qaytarish (201 status bilan)
-
         $request->validate([
             'email' => 'required|email',
             'password' => 'required'
@@ -45,38 +46,45 @@ class AuthController extends Controller
 
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return [
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid credentials.',
                 'errors' => [
                     'email' => ['The provided credentials are incorrect.']
                 ]
-            ];
+            ], 401);
         }
 
-        $token = $user->createToken($user->name);
+        $token = $user->createToken($user->name)->plainTextToken;
 
-        return [
-            'user' => $user,
-            'token' => $token->plainTextToken
-        ];
+        return response()->json([
+            'success' => true,
+            'message' => 'Login successful.',
+            'data' => [
+                'user' => $user,
+                'token' => $token
+            ]
+        ], 200);
 
     }
 
     public function logout(Request $request)
     {
-        // 1. Hozirgi foydalanuvchining access tokenini o‘chirish (faqat bitta token)
-        // 2. Logout muvaffaqiyatli bo‘lganini bildiruvchi JSON javob qaytarish
 
         $request->user()->currentAccessToken()->delete();
 
-        return [
-            'message' => 'You are logged out.'
-        ];
+        return response()->json([
+            'success' => true,
+            'message' => 'You have been logged out successfully.'
+        ], 200);
     }
 
     public function me(Request $request)
     {
-        // 1. Auth qilingan foydalanuvchi (user()) malumotlarini JSON formatda qaytarish
-
-        return response()->json($request->user());
+        return response()->json([
+            'success' => true,
+            'message' => 'Authenticated user data retrieved successfully.',
+            'data' => $request->user()
+        ], 200);
     }
 }

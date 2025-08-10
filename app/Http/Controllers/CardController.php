@@ -26,9 +26,10 @@ class CardController extends Controller
         })->get();
 
         return response()->json([
-            'status' => 'success',
+            'success' => true,
+            'message' => 'Cards retrieved successfully.',
             'data' => $cards
-        ]);
+        ], 200);
     }
 
     /**
@@ -37,7 +38,7 @@ class CardController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string',
+            'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'status_id' => 'required|exists:statuses,id',
         ]);
@@ -45,7 +46,8 @@ class CardController extends Controller
         $card = Card::create($validated);
 
         return response()->json([
-            'status' => 'success',
+            'success' => true,
+            'message' => 'Card created successfully.',
             'data' => $card
         ], 201);
     }
@@ -56,9 +58,10 @@ class CardController extends Controller
     public function show(Card $card)
     {
         return response()->json([
-            'status' => 'success',
+            'success' => true,
+            'message' => 'Card retrieved successfully.',
             'data' => $card
-        ]);
+        ], 200);
     }
 
     /**
@@ -67,7 +70,7 @@ class CardController extends Controller
     public function update(Request $request, Card $card)
     {
         $validated = $request->validate([
-            'title' => 'sometimes|string',
+            'title' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
             'status_id' => 'sometimes|exists:statuses,id',
         ]);
@@ -75,9 +78,10 @@ class CardController extends Controller
         $card->update($validated);
 
         return response()->json([
-            'status' => 'success',
+            'success' => true,
+            'message' => 'Card updated successfully.',
             'data' => $card
-        ]);
+        ], 200);
     }
 
     /**
@@ -88,8 +92,8 @@ class CardController extends Controller
         $card->delete();
 
         return response()->json([
-            'status' => 'success',
-            'message' => 'Card deleted successfully'
-        ]);
+            'success' => true,
+            'message' => 'Card deleted successfully.'
+        ], 200);
     }
 }

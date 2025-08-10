@@ -24,9 +24,10 @@ class ProjectController extends Controller
         $projects = Project::where('user_id', auth()->id())->get();
 
         return response()->json([
-            'status' => 'success',
+            'success' => true,
+            'message' => 'Projects retrieved successfully.',
             'data' => $projects
-        ]);
+        ], 200);
     }
 
     /**
@@ -35,7 +36,7 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string',
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string'
         ]);
 
@@ -56,12 +57,13 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         return response()->json([
-            'status' => 'success',
+            'success' => true,
+            'message' => 'Project retrieved successfully.',
             'data' => [
                 'project' => $project,
                 'user' => $project->user
             ]
-        ]);
+        ], 200);
     }
 
     /**
@@ -70,16 +72,18 @@ class ProjectController extends Controller
     public function update(Request $request, Project $project)
     {
         $validated = $request->validate([
-            'name' => 'sometimes|string',
+            'name' => 'sometimes|string|max:255',
             'user_id' => 'sometimes|exists:users,id',
+            'description' => 'nullable|string'
         ]);
 
         $project->update($validated);
 
         return response()->json([
-            'status' => 'success',
+            'success' => true,
+            'message' => 'Project updated successfully.',
             'data' => $project
-        ]);
+        ], 200);
     }
 
     /**
@@ -90,8 +94,8 @@ class ProjectController extends Controller
         $project->delete();
 
         return response()->json([
-            'status' => 'success',
-            'message' => 'Deleted successfully'
-        ]);
+            'success' => true,
+            'message' => 'Project deleted successfully.'
+        ], 200);
     }
 }

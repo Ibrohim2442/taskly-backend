@@ -26,9 +26,10 @@ class BoardController extends Controller
         })->get();
 
         return response()->json([
-            'status' => 'success',
+            'success' => true,
+            'message' => 'Boards retrieved successfully.',
             'data' => $boards
-        ]);
+        ], 200);
     }
 
     /**
@@ -37,14 +38,15 @@ class BoardController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string',
+            'name' => 'required|string|max:255',
             'project_id' => 'required|exists:projects,id',
         ]);
 
         $board = Board::create($validated);
 
         return response()->json([
-            'status' => 'success',
+            'success' => true,
+            'message' => 'Board created successfully.',
             'data' => $board
         ], 201);
     }
@@ -55,9 +57,10 @@ class BoardController extends Controller
     public function show(Board $board)
     {
         return response()->json([
-            'status' => 'success',
+            'success' => true,
+            'message' => 'Board retrieved successfully.',
             'data' => $board
-        ]);
+        ], 200);
     }
 
     /**
@@ -66,16 +69,17 @@ class BoardController extends Controller
     public function update(Request $request, Board $board)
     {
         $validated = $request->validate([
-            'name' => 'sometimes|string',
+            'name' => 'sometimes|string|max:255',
             'project_id' => 'sometimes|exists:projects,id',
         ]);
 
         $board->update($validated);
 
         return response()->json([
-            'status' => 'success',
+            'success' => true,
+            'message' => 'Board updated successfully.',
             'data' => $board
-        ]);
+        ], 200);
     }
 
     /**
@@ -86,8 +90,8 @@ class BoardController extends Controller
         $board->delete();
 
         return response()->json([
-            'status' => 'success',
-            'message' => 'Board deleted successfully'
-        ]);
+            'success' => true,
+            'message' => 'Board deleted successfully.'
+        ], 200);
     }
 }

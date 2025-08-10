@@ -26,9 +26,10 @@ class StatusController extends Controller
         })->get();
 
         return response()->json([
-            'status' => 'success',
+            'success' => true,
+            'message' => 'Statuses retrieved successfully.',
             'data' => $statuses
-        ]);
+        ], 200);
     }
 
     /**
@@ -37,14 +38,15 @@ class StatusController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string',
+            'name' => 'required|string|max:255',
             'board_id' => 'required|exists:boards,id',
         ]);
 
         $status = Status::create($validated);
 
         return response()->json([
-            'status' => 'success',
+            'success' => true,
+            'message' => 'Status created successfully.',
             'data' => $status
         ], 201);
     }
@@ -55,9 +57,10 @@ class StatusController extends Controller
     public function show(Status $status)
     {
         return response()->json([
-            'status' => 'success',
+            'success' => true,
+            'message' => 'Status retrieved successfully.',
             'data' => $status
-        ]);
+        ], 200);
     }
 
     /**
@@ -66,16 +69,17 @@ class StatusController extends Controller
     public function update(Request $request, Status $status)
     {
         $validated = $request->validate([
-            'name' => 'sometimes|string',
+            'name' => 'sometimes|string|max:255',
             'board_id' => 'sometimes|exists:boards,id',
         ]);
 
         $status->update($validated);
 
         return response()->json([
-            'status' => 'success',
+            'success' => true,
+            'message' => 'Status updated successfully.',
             'data' => $status
-        ]);
+        ], 200);
     }
 
     /**
@@ -86,8 +90,8 @@ class StatusController extends Controller
         $status->delete();
 
         return response()->json([
-            'status' => 'success',
-            'message' => 'Status deleted successfully'
-        ]);
+            'success' => true,
+            'message' => 'Status deleted successfully.'
+        ], 200);
     }
 }
